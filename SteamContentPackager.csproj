@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+  <PropertyGroup>
+    <AssemblyName>SteamContentPackager</AssemblyName>
+    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+    <OutputType>WinExe</OutputType>
+    <UseWPF>True</UseWPF>
+    <TargetFramework>net461</TargetFramework>
+    <Prefer32Bit>True</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <LangVersion>12.0</LangVersion>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace />
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="ui\draganddrop\icons\effectcopy.png" />
+    <None Remove="ui\draganddrop\icons\effectlink.png" />
+    <None Remove="ui\draganddrop\icons\effectnone.png" />
+    <None Remove="ui\draganddrop\icons\effectmove.png" />
+    <EmbeddedResource Include="ui\draganddrop\icons\effectcopy.png" LogicalName="ui/draganddrop/icons/effectcopy.png" />
+    <EmbeddedResource Include="ui\draganddrop\icons\effectlink.png" LogicalName="ui/draganddrop/icons/effectlink.png" />
+    <EmbeddedResource Include="ui\draganddrop\icons\effectnone.png" LogicalName="ui/draganddrop/icons/effectnone.png" />
+    <EmbeddedResource Include="ui\draganddrop\icons\effectmove.png" LogicalName="ui/draganddrop/icons/effectmove.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="WindowsBase" />
+    <Reference Include="System.Xml" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="System.Core" />
+    <Reference Include="SteamKit2">
+      <HintPath>..\SteamKit2.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web" />
+  </ItemGroup>
+</Project>

@@ -23,7 +23,8 @@ internal class Resources
 		{
 			if (resourceMan == null)
 			{
-				resourceMan = new ResourceManager("SteamContentPackager.Properties.Resources", typeof(Resources).Assembly);
+				ResourceManager resourceManager = new ResourceManager("SteamContentPackager.Properties.Resources", typeof(Resources).Assembly);
+				resourceMan = resourceManager;
 			}
 			return resourceMan;
 		}
@@ -41,12 +42,6 @@ internal class Resources
 			resourceCulture = value;
 		}
 	}
-
-	internal static byte[] GongSolutions_Wpf_DragDrop => (byte[])ResourceManager.GetObject("GongSolutions_Wpf_DragDrop", resourceCulture);
-
-	internal static byte[] Newtonsoft_Json => (byte[])ResourceManager.GetObject("Newtonsoft_Json", resourceCulture);
-
-	internal static byte[] SteamKit2 => (byte[])ResourceManager.GetObject("SteamKit2", resourceCulture);
 
 	internal Resources()
 	{
