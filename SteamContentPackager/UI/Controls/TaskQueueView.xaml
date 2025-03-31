@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<UserControl x:Class="SteamContentPackager.UI.Controls.TaskQueueView" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:dragAndDrop="clr-namespace:SteamContentPackager.UI.DragAndDrop" xmlns:converters="clr-namespace:SteamContentPackager.UI.Converters" xmlns:local="clr-namespace:SteamContentPackager.Packing" xmlns:controls="clr-namespace:SteamContentPackager.UI.Controls" DataContext="{Binding RelativeSource={RelativeSource Self}}">
+  <FrameworkElement.Resources>
+    <ResourceDictionary>
+      <converters:ItemSizeConverter x:Key="SizeConverter" />
+    </ResourceDictionary>
+  </FrameworkElement.Resources>
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+    <ListBox Margin="5" Style="{DynamicResource AppListStyle}" ItemContainerStyle="{DynamicResource TaskListItemStyle}" dragAndDrop:DragDrop.IsDragSource="True" dragAndDrop:DragDrop.IsDropTarget="True" ItemsSource="{Binding TaskQueue.Tasks}" dragAndDrop:DragDrop.DropHandler="{Binding}" dragAndDrop:DragDrop.DragHandler="{Binding}">
+      <ItemsControl.ItemTemplate>
+        <DataTemplate>
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition />
+              <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.ColumnSpan="2">
+              <StackPanel Orientation="Horizontal">
+                <TextBlock FontWeight="SemiBold" Text="{Binding AppConfig.SteamApp.Name}" />
+                <TextBlock Text="{Binding State, StringFormat= - ({0})}" />
+              </StackPanel>
+              <TextBlock Text="{Binding CurrentSubTask.Info}">
+                <FrameworkElement.Style>
+                  <Style TargetType="{x:Type TextBlock}">
+                    <Style.Triggers>
+                      <DataTrigger Binding="{Binding CurrentSubTask}" Value="{x:Null}">
+                        <DataTrigger.Setters>
+                          <Setter Property="Visibility" Value="Collapsed" />
+                        </DataTrigger.Setters>
+                      </DataTrigger>
+                      <DataTrigger Value="{x:Static local:TaskState.Complete}" Binding="{Binding State}">
+                        <DataTrigger.Setters>
+                          <Setter Property="Visibility" Value="Collapsed" />
+                        </DataTrigger.Setters>
+                      </DataTrigger>
+                    </Style.Triggers>
+                  </Style>
+                </FrameworkElement.Style>
+              </TextBlock>
+              <ProgressBar Height="8" Margin="0,2" Grid.ColumnSpan="2" Maximum="100" Value="{Binding Progress}" />
+            </StackPanel>
+            <Button Grid.Column="1" Grid.RowSpan="3" Width="12" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,2,2,0" Height="12" Command="{Binding CancelCommand}">
+              <FrameworkElement.Style>
+                <Style TargetType="{x:Type Button}">
+                  <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
+                  <Setter Property="BorderThickness" Value="0" />
+                  <Setter Property="Template">
+                    <Setter.Value>
+                      <ControlTemplate>
+                        <Grid>
+                          <Rectangle Name="parent" Fill="#00FFFFFF" IsHitTestVisible="True" />
+                          <Line X1="0" Y1="0" Stroke="{TemplateBinding Control.Foreground}" StrokeThickness="2" X2="{Binding ElementName=parent, Path=ActualWidth}" Y2="{Binding ElementName=parent, Path=ActualHeight}" />
+                          <Line X1="0" Y2="0" Stroke="{TemplateBinding Control.Foreground}" StrokeThickness="2" Y1="{Binding ElementName=parent, Path=ActualHeight}" X2="{Binding ElementName=parent, Path=ActualWidth}" />
+                        </Grid>
+                      </ControlTemplate>
+                    </Setter.Value>
+                  </Setter>
+                  <Style.Triggers>
+                    <Trigger Property="UIElement.IsMouseOver" Value="True">
+                      <Setter Property="Foreground" Value="#FFFF0000" />
+                    </Trigger>
+                  </Style.Triggers>
+                </Style>
+              </FrameworkElement.Style>
+            </Button>
+          </Grid>
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+    </ListBox>
+    <DockPanel Grid.Row="1">
+      <Button Content="Clear Completed" Width="110" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="5,0,5,5" Click="ClearCompleted_Clicked" />
+      <Button Width="110" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="5,0,5,5" Content="{Binding PauseResumeString, FallbackValue=Pause}" Click="TogglePause_Clicked" />
+    </DockPanel>
+  </Grid>
+</UserControl>

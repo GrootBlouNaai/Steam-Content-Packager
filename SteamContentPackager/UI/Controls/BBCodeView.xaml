@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<UserControl x:Class="SteamContentPackager.UI.Controls.BBCodeView" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:local="clr-namespace:SteamContentPackager.UI.Controls" DataContext="{Binding RelativeSource={RelativeSource Self}}">
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+    <TextBox Margin="5" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Text="{Binding BBCode}" />
+    <Grid Row="1">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition />
+        <ColumnDefinition />
+      </Grid.ColumnDefinitions>
+      <Button Margin="5,0,25,5" Grid.Column="0" HorizontalAlignment="Right" Width="110" Content="Generate" Click="Generate_Clicked" />
+      <Button Margin="25,0,5,5" Grid.Column="1" HorizontalAlignment="Left" Width="110" Content="Copy To Clipboard" Click="CopyToClipboard_Clicked" />
+    </Grid>
+  </Grid>
+</UserControl>

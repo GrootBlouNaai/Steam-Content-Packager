@@ -5,14 +5,14 @@ using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Windows;
 
-[assembly: AssemblyTitle("Steam Content Packager")]
+[assembly: AssemblyTitle("SteamContentPackager")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Steam Content Packager")]
-[assembly: AssemblyCopyright("Copyright © SyntheticEthics 2017")]
+[assembly: AssemblyProduct("SteamContentPackager")]
+[assembly: AssemblyCopyright("Copyright ©  2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: ComVisible(false)]
 [assembly: ThemeInfo(ResourceDictionaryLocation.None, ResourceDictionaryLocation.SourceAssembly)]
-[assembly: AssemblyFileVersion("2.9.0.0")]
-[assembly: AssemblyVersion("2.9.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("1.0.0.0")]

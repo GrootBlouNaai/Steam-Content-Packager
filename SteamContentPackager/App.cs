@@ -1,70 +1,45 @@
 using System;
 using System.IO;
-using System.Reflection;
 using System.Windows;
-using System.Windows.Forms;
+using System.Windows.Controls;
 using SteamContentPackager.Properties;
+using SteamContentPackager.Steam;
 using SteamContentPackager.Utils;
 
 namespace SteamContentPackager;
 
-public partial class App : System.Windows.Application
+public partial class App : Application
 {
-	private App()
+	static App()
 	{
-		AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;
-		SteamContentPackager.Utils.Settings.Load();
+		Log.AddHandler<ConsoleLogHandler>();
+		Log.AddHandler<ListBoxLogHandler>(new ListBox());
+		Log.AddHandler<FileLogHandler>();
+		AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
+		CreateDirectories();
 	}
 
-	private bool GetSteamPath()
+	private static void CreateDirectories()
 	{
-		FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
-		folderBrowserDialog.Description = "Select Steam directory";
-		folderBrowserDialog.ShowNewFolderButton = false;
-		while (string.IsNullOrEmpty(SteamContentPackager.Utils.Settings.SteamPath))
+		string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+		if (!Directory.Exists($"{baseDirectory}\\UserData"))
 		{
-			if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
-			{
-				if (!File.Exists($"{folderBrowserDialog.SelectedPath}\\steam.exe"))
-				{
-					System.Windows.Forms.MessageBox.Show("Invalid Steam Directory");
-					continue;
-				}
-				SteamContentPackager.Utils.Settings.SteamPath = folderBrowserDialog.SelectedPath;
-				return true;
-			}
-			return false;
+			Directory.CreateDirectory($"{baseDirectory}\\UserData");
 		}
-		return false;
 	}
 
-	private static Assembly OnAssemblyResolve(object sender, ResolveEventArgs args)
+	private static void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs args)
 	{
-		if ((args.Name.Contains(",") ? args.Name.Substring(0, args.Name.IndexOf(",", StringComparison.InvariantCultureIgnoreCase)) : args.Name.Replace(".dll", "")).ToLower().EndsWith(".resources"))
+		Log.WriteException((Exception)args.ExceptionObject);
+		if (args.IsTerminating)
 		{
-			return null;
+			SteamSession.Disconnect();
 		}
-		Assembly.GetExecutingAssembly().GetManifestResourceNames();
-		string text = $"{Assembly.GetExecutingAssembly().EntryPoint.DeclaringType?.Namespace}.Embedded.{new AssemblyName(args.Name).Name}.dll";
-		if (text.Contains("SteamKit2"))
-		{
-			return Assembly.Load(SteamContentPackager.Properties.Resources.SteamKit2);
-		}
-		if (text.Contains("Gong"))
-		{
-			return Assembly.Load(SteamContentPackager.Properties.Resources.GongSolutions_Wpf_DragDrop);
-		}
-		if (text.Contains("Json"))
-		{
-			return Assembly.Load(SteamContentPackager.Properties.Resources.Newtonsoft_Json);
-		}
-		using Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(text);
-		if (stream == null)
-		{
-			return null;
-		}
-		byte[] array = new byte[stream.Length];
-		stream.Read(array, 0, (int)stream.Length);
-		return Assembly.Load(array);
+	}
+
+	private void App_OnExit(object sender, ExitEventArgs e)
+	{
+		Settings.Default.Save();
+		SteamSession.Disconnect();
 	}
 }

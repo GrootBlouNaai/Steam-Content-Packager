@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<UserControl x:Class="SteamContentPackager.UI.Controls.LoginPanel" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" Width="250" Foreground="{DynamicResource ForegroundBrush}" VerticalAlignment="Center" HorizontalAlignment="Center" xmlns:controls="clr-namespace:SteamContentPackager.UI.Controls;assembly=SteamContentPackager" DataContext="{Binding RelativeSource={RelativeSource Self}}">
+  <Grid>
+    <Border BorderThickness="1" BorderBrush="{DynamicResource ForegroundBrush}" Background="{DynamicResource BackgroundBrush}" IsEnabled="{Binding Connected}">
+      <StackPanel>
+        <TextBlock Text="LOGIN TO STEAM" TextAlignment="Center" FontSize="20" Margin="5" />
+        <TextBlock Text="Username" TextAlignment="Center" />
+        <TextBox Name="UsernameTextBox" Margin="5,0 " TabIndex="0" IsEnabled="{Binding ControlsEnabled}" Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" />
+        <TextBlock Text="Password" TextAlignment="Center" />
+        <PasswordBox Name="PassBox" Margin="5,0" TabIndex="1" IsEnabled="{Binding ControlsEnabled}" KeyDown="PassBox_OnKeyDown" />
+        <TextBlock Margin="5,0,5,0 " TextAlignment="Center" Foreground="#FFFF0000" Visibility="{Binding ErrorMessageVisibility}" Text="{Binding ErrorMessage}" />
+        <StackPanel IsEnabled="{Binding ControlsEnabled}" Visibility="{Binding AuthBoxVisibility}">
+          <TextBlock Text="Auth Code" TextAlignment="Center" />
+          <TextBox Margin="5,0,5,5" Text="{Binding AuthCode, UpdateSourceTrigger=PropertyChanged}" />
+        </StackPanel>
+        <Grid Margin="0,5">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+          </Grid.ColumnDefinitions>
+          <Button Name="LoginButton" Grid.Column="0" Width="75" Margin="25,0,5,0" Content="LOGIN" HorizontalAlignment="Center" TabIndex="2" IsEnabled="{Binding ControlsEnabled}" Command="{Binding LoginCommand}" />
+          <Button Grid.Column="1" Width="75" Margin="5,0,25,0" Content="CANCEL" HorizontalAlignment="Center" Click="Cancel_Clicked" />
+        </Grid>
+      </StackPanel>
+    </Border>
+  </Grid>
+</UserControl>

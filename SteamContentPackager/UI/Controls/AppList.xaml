@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<UserControl x:Class="SteamContentPackager.UI.Controls.AppList" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:converters="clr-namespace:SteamContentPackager.UI.Converters" x:Name="Control" xmlns:controls="clr-namespace:SteamContentPackager.UI.Controls">
+  <FrameworkElement.Resources>
+    <ResourceDictionary>
+      <converters:BoolToBoldConverter x:Key="BoldConverter" />
+      <converters:AccountIdToNameConverter x:Key="NameConverter" />
+    </ResourceDictionary>
+  </FrameworkElement.Resources>
+  <Grid>
+    <DockPanel>
+      <TextBox DockPanel.Dock="Top" Tag="Search" Margin="5" Text="{Binding AppFilter, ElementName=Control, UpdateSourceTrigger=PropertyChanged}" />
+      <ListBox Style="{DynamicResource AppListStyle}" DockPanel.Dock="Bottom" Margin="5,0,5,5" SelectedItem="{Binding SelectedApp, ElementName=Control, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding FilteredApps, ElementName=Control}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate>
+            <TextBlock Text="{Binding}" FontWeight="{Binding Installed, Converter={StaticResource BoldConverter}}">
+              <FrameworkElement.Resources>
+                <ResourceDictionary>
+                  <Style x:Key="{x:Type ToolTip}" TargetType="{x:Type ToolTip}">
+                    <Setter Property="Background" Value="{DynamicResource BackgroundBrush}" />
+                    <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
+                  </Style>
+                </ResourceDictionary>
+              </FrameworkElement.Resources>
+              <FrameworkElement.ToolTip>
+                <StackPanel Orientation="Horizontal">
+                  <TextBlock Text="OwnerId: " />
+                  <TextBlock Text="{Binding OwnerId, Converter={StaticResource NameConverter}, Mode=OneWay}" />
+                </StackPanel>
+              </FrameworkElement.ToolTip>
+            </TextBlock>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ListBox>
+    </DockPanel>
+  </Grid>
+</UserControl>

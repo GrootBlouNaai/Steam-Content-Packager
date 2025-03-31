@@ -1,0 +1,125 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<UserControl x:Class="SteamContentPackager.UI.Controls.AppConfigView" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:local="clr-namespace:SteamContentPackager.UI.Controls" xmlns:converters="clr-namespace:SteamContentPackager.UI.Converters" DataContext="{Binding RelativeSource={RelativeSource Self}}">
+  <FrameworkElement.Resources>
+    <ResourceDictionary>
+      <converters:SizeStringConverter x:Key="SizeString" />
+      <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+      <DataTemplate x:Key="DataTemplate1">
+        <StackPanel Orientation="Horizontal">
+          <TextBlock Text="🔑" Visibility="{Binding RequiresPass, Converter={StaticResource BooleanToVisibilityConverter}}" />
+          <TextBlock Text="{Binding}" />
+        </StackPanel>
+      </DataTemplate>
+    </ResourceDictionary>
+  </FrameworkElement.Resources>
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+    <StackPanel Margin="5,0,5,0" Grid.Row="0">
+      <UniformGrid Columns="3" />
+      <Grid>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition />
+          <ColumnDefinition Width="2*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+          <RowDefinition />
+          <RowDefinition />
+        </Grid.RowDefinitions>
+        <TextBlock TextAlignment="Center" Text="Branch" />
+        <TextBlock Grid.Row="0" Grid.Column="1" TextAlignment="Center" Text="Password" />
+        <ComboBox Grid.Column="0" Grid.Row="1" Margin="0,3,5,0" Style="{DynamicResource ComboBoxStyle2}" ItemTemplate="{DynamicResource DataTemplate1}" ItemsSource="{Binding Branches}" SelectedItem="{Binding AppConfig.Branch}" />
+        <DockPanel Grid.Row="1" Grid.Column="1" IsEnabled="{Binding AppConfig.Branch.RequiresPass}">
+          <Button DockPanel.Dock="Right" HorizontalAlignment="Center" Content="Check" Margin="0,3,0,0" Click="CheckPassword_Clicked" />
+          <TextBox DockPanel.Dock="Right" Margin="0,3,5,0" Text="{Binding AppConfig.Branch.Password}" />
+        </DockPanel>
+      </Grid>
+    </StackPanel>
+    <StackPanel Grid.Row="1" Margin="5,0,5,5">
+      <UniformGrid Columns="3">
+        <TextBlock TextAlignment="Center" Text="Language" />
+        <TextBlock TextAlignment="Center" Text="Operating System" />
+        <TextBlock TextAlignment="Center" Text="OS Architecture" />
+      </UniformGrid>
+      <UniformGrid Columns="3">
+        <ComboBox Name="LanguageComboBox" Margin="0,3,5,0" Style="{DynamicResource ComboBoxStyle2}" ItemsSource="{Binding Languages}" SelectedItem="{Binding AppConfig.Language}" />
+        <ComboBox Name="OsComboBox" Margin="0,3,0,0" Style="{DynamicResource ComboBoxStyle2}" ItemsSource="{Binding OperatingSystems}" SelectedItem="{Binding AppConfig.OperatingSystem}" />
+        <ComboBox Name="ArchitechtureComboBox" Margin="5,3,0,0" Style="{DynamicResource ComboBoxStyle2}" ItemsSource="{Binding Architectures}" SelectedItem="{Binding AppConfig.Arch}" />
+      </UniformGrid>
+    </StackPanel>
+    <DataGrid Name="DepotList" Grid.Row="2" GridLinesVisibility="None" AutoGenerateColumns="False" RowHeaderWidth="0" Margin="5,0,5,5" SelectionMode="Extended" ItemsSource="{Binding AppConfig.Depots}">
+      <DataGrid.Columns>
+        <DataGridTemplateColumn Width="30" CanUserResize="False">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate>
+              <CheckBox IsEnabled="{Binding Subscribed}" IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+        <DataGridTemplateColumn Width="75" IsReadOnly="True" Header="Depot ID">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate>
+              <TextBlock TextAlignment="Center" Text="{Binding Id}">
+                <FrameworkElement.Style>
+                  <Style TargetType="{x:Type TextBlock}">
+                    <Style.Triggers>
+                      <Trigger Property="IsEnabled" Value="False">
+                        <Setter Property="Foreground" Value="{DynamicResource Disabled.ForegroundBrush}" />
+                      </Trigger>
+                      <Trigger Property="UIElement.IsFocused" Value="True">
+                        <Setter Property="Foreground" Value="{DynamicResource BackgroundBrush}" />
+                      </Trigger>
+                    </Style.Triggers>
+                  </Style>
+                </FrameworkElement.Style>
+              </TextBlock>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+        <DataGridTextColumn Header="Name" MinWidth="150" IsReadOnly="True" Binding="{Binding Name}" />
+        <DataGridTextColumn Header="Max Size" MinWidth="75" IsReadOnly="True" Binding="{Binding MaxSize, Converter={StaticResource SizeString}}" />
+        <DataGridTemplateColumn Header="ManifestID">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate>
+              <Grid>
+                <TextBlock Text="{Binding ManifestId}">
+                  <FrameworkElement.Style>
+                    <Style TargetType="{x:Type TextBlock}">
+                      <Style.Triggers>
+                        <Trigger Property="Text" Value="0">
+                          <Setter Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                      </Style.Triggers>
+                    </Style>
+                  </FrameworkElement.Style>
+                </TextBlock>
+                <TextBlock Text="{Binding EncryptedManifestId}">
+                  <FrameworkElement.Style>
+                    <Style TargetType="{x:Type TextBlock}">
+                      <Setter Property="Foreground" Value="#FFFFA500" />
+                      <Style.Triggers>
+                        <Trigger Property="Text" Value="">
+                          <Setter Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                      </Style.Triggers>
+                    </Style>
+                  </FrameworkElement.Style>
+                </TextBlock>
+              </Grid>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+      </DataGrid.Columns>
+    </DataGrid>
+    <GroupBox Grid.Row="3" Header="Plugin">
+      <StackPanel>
+        <ComboBox ItemsSource="{Binding Plugins}" SelectedItem="{Binding SelectedPlugin}" />
+        <ContentControl Content="{Binding PluginControl}" />
+      </StackPanel>
+    </GroupBox>
+  </Grid>
+</UserControl>
